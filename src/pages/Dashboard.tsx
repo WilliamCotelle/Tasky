@@ -1,6 +1,8 @@
 import React from "react";
 import Sidebar from "../components/ui/Sidebar";
 import Calendar from "../components/Calendar";
+
+import ProductivityTimer from "../components/ProductivityTimer";
 import Taskboard from "../components/Taskboard";
 
 const Dashboard: React.FC = () => {
@@ -18,6 +20,7 @@ const Dashboard: React.FC = () => {
             addTask={(task) => {}}
             updateTask={(task) => {}}
           />
+          <ProductivityTimer />
         </div>
       </main>
     </div>

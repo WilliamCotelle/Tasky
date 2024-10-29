@@ -1,7 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { format, addDays, startOfMonth, endOfMonth } from "date-fns";
+import {
+  format,
+  addDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  addMonths,
+} from "date-fns";
 import { fr } from "date-fns/locale";
+import { ChevronLeft, ChevronRight } from "lucide-react"; // Import des icônes pour navigation
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -28,6 +36,7 @@ export default function Calendar2() {
 
   const startMonth = startOfMonth(currentDate);
   const endMonth = endOfMonth(currentDate);
+
   const days = Array.from({ length: endMonth.getDate() }).map((_, index) => {
     const date = addDays(startMonth, index);
     return {
@@ -61,11 +70,42 @@ export default function Calendar2() {
     setIsModalOpen(false);
   };
 
+  // Navigation pour le mois précédent
+  const handlePreviousMonth = () => {
+    setCurrentDate((prevDate) => subMonths(prevDate, 1));
+  };
+
+  // Navigation pour le mois suivant
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => addMonths(prevDate, 1));
+  };
+
   return (
     <div className="bg-gray-50 p-8 rounded-3xl shadow-xl border border-gray-200">
       <h2 className="text-3xl font-semibold mb-8 text-gray-900 tracking-wide">
         Mon Calendrier
       </h2>
+
+      {/* Affichage du mois et de l'année avec navigation alignée à droite */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-lg font-semibold text-gray-800">
+          {format(currentDate, "MMMM yyyy", { locale: fr })}
+        </span>
+        <div className="flex space-x-4">
+          <button
+            onClick={handlePreviousMonth}
+            className="text-gray-600 hover:text-gray-800 transition"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            onClick={handleNextMonth}
+            className="text-gray-600 hover:text-gray-800 transition"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
+      </div>
 
       {/* Contenu principal du calendrier */}
       <div className="flex-auto overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
@@ -95,7 +135,7 @@ export default function Calendar2() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal pour les événements */}
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
